@@ -47,6 +47,29 @@ fps = cap.get(cv2.CAP_PROP_FPS)
 fourcc = cv2.VideoWriter_fourcc(*'mp4v')  # Codec for .mp4 format
 out = cv2.VideoWriter(output_video_path, fourcc, fps, (frame_width, frame_height))
 
+# Initialize variables to track min and max angles-Future
+# min_angles = {
+#     "Left Elbow": float('inf'),
+#     "Left Shoulder": float('inf'),
+#     "Left Knee": float('inf'),
+#     "Left Hip": float('inf'),
+#     "Right Elbow": float('inf'),
+#     "Right Shoulder": float('inf'),
+#     "Right Knee": float('inf'),
+#     "Right Hip": float('inf')
+# }
+#
+# max_angles = {
+#     "Left Elbow": float('-inf'),
+#     "Left Shoulder": float('-inf'),
+#     "Left Knee": float('-inf'),
+#     "Left Hip": float('-inf'),
+#     "Right Elbow": float('-inf'),
+#     "Right Shoulder": float('-inf'),
+#     "Right Knee": float('-inf'),
+#     "Right Hip": float('-inf')
+# }
+
 while cap.isOpened():
     ret, frame = cap.read()
 
@@ -98,6 +121,25 @@ while cap.isOpened():
         right_knee_angle = calculate_3d_angle(right_hip, right_knee, right_ankle)
         right_hip_angle = calculate_3d_angle(right_shoulder, right_hip, right_knee)
 
+        # Update min and max angles-Future
+        # min_angles["Left Elbow"] = min(min_angles["Left Elbow"], left_elbow_angle)
+        # min_angles["Left Shoulder"] = min(min_angles["Left Shoulder"], left_shoulder_angle)
+        # min_angles["Left Knee"] = min(min_angles["Left Knee"], left_knee_angle)
+        # min_angles["Left Hip"] = min(min_angles["Left Hip"], left_hip_angle)
+        # min_angles["Right Elbow"] = min(min_angles["Right Elbow"], right_elbow_angle)
+        # min_angles["Right Shoulder"] = min(min_angles["Right Shoulder"], right_shoulder_angle)
+        # min_angles["Right Knee"] = min(min_angles["Right Knee"], right_knee_angle)
+        # min_angles["Right Hip"] = min(min_angles["Right Hip"], right_hip_angle)
+        #
+        # max_angles["Left Elbow"] = max(max_angles["Left Elbow"], left_elbow_angle)
+        # max_angles["Left Shoulder"] = max(max_angles["Left Shoulder"], left_shoulder_angle)
+        # max_angles["Left Knee"] = max(max_angles["Left Knee"], left_knee_angle)
+        # max_angles["Left Hip"] = max(max_angles["Left Hip"], left_hip_angle)
+        # max_angles["Right Elbow"] = max(max_angles["Right Elbow"], right_elbow_angle)
+        # max_angles["Right Shoulder"] = max(max_angles["Right Shoulder"], right_shoulder_angle)
+        # max_angles["Right Knee"] = max(max_angles["Right Knee"], right_knee_angle)
+        # max_angles["Right Hip"] = max(max_angles["Right Hip"], right_hip_angle)
+
         # Display angles in the top-left corner
         start_x, start_y = 20, 40  # Starting coordinates for the text
         line_height = 30  # Vertical space between each line of text
@@ -122,11 +164,29 @@ while cap.isOpened():
     # Write the processed frame to the output video
     out.write(frame)
 
-    # Display the frame with angles
-    cv2.imshow('Pose Estimation with Angles', frame)
+    # Check if frame is valid before showing
+    if frame.size > 0:
+        cv2.imshow('Pose Estimation with Angles', frame)
 
     if cv2.waitKey(10) & 0xFF == ord('q'):
         break
+
+## Process the last frame to display min and max angles
+# if frame is not None:  # Check if the last frame is valid
+#     for i, (angle_name, min_angle) in enumerate(min_angles.items()):
+#         position = (frame_width - 250, frame_height - (40 + i * 30))  # Position for min angles
+#         cv2.putText(frame, f"{angle_name} Min: {int(min_angle)}", position, cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 0), 2, cv2.LINE_AA)
+#
+#     for i, (angle_name, max_angle) in enumerate(max_angles.items()):
+#         position = (frame_width - 250, frame_height - (200 + i * 30))  # Position for max angles
+#         cv2.putText(frame, f"{angle_name} Max: {int(max_angle)}", position, cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 255), 2, cv2.LINE_AA)
+#
+#     # Write the last frame with min and max angles to the output video
+#     out.write(frame)
+
+# Add a delay to view the final frame
+# cv2.imshow('Pose Estimation with Angles', frame)
+# cv2.waitKey(5000)  # Wait for 5000 milliseconds (5 seconds)
 
 # Release resources
 cap.release()
